@@ -1,0 +1,117 @@
+{% extends "tasks/base.html" %}
+
+{% block body %}
+<h2 class="m-4">All Tasks</h2>
+    <div class="row">
+        <div class="col-12">
+            {% if tasks %}
+            <div class="card border-success ms-2 me-3 mb-3" ></div>
+                <div class="card-header">
+                    <i class="fa-solid fa-list" fa-lg></i> Task Records
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                              <tr>
+                                <th scope="col">Task Number</th>
+                                <th scope="col">Task Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">DeadLine</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for task in tasks %}
+                              <tr>
+                                 <td>{{ task.task_number }}</td>
+                                 <td>{{ task.task_name }}</td>
+                                 <td>{{ task.task_description }}</td>
+                                 <td>{{ task.task_deadline_date }}</td>
+                                 <td>{{ task.task_status }}</td>
+                                 <td>
+                                   <button type="button" class="btn btn-success me-1" href="{% url 'view_task' task.id %}" data-bs-toggle="modal" data-bs-target="#myModal{{task.id}}">
+                                    <i class="fa-solid fa-circle-info fa-lg"></i>
+                                   </button>
+
+
+                                   <!--modal - delete task-->
+                                   <div class="modal" id="delete{{task.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title">
+                                            Task: {{ task.task_name }} 
+                                          </h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Do You Want Really to Delete This Task ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{% url 'delete' task.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="submit" class="btn btn-primary" value="Delete">
+                                              </form>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <a class="btn btn-warning me-1" href="{% url 'edit' task.id %}">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                  </a>
+
+                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{task.id}}">
+                                    <i class="fa-solid fa-trash-can fa-lg"></i>
+                                  </button> 
+
+                                  <div class="modal" id="myModal{{task.id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title">
+                                            Task: {{ task.task_name }} 
+                                          </h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <ul class="list-unstyled">
+                                            <li>Task Number: <strong>{{ task.task_number }}</strong></li>
+                                            <li>Task Name: <strong>{{ task.task_name }}</strong></li>
+                                            <li>Description: <strong>{{ task.task_description }}</strong></li>
+                                            <li>DeadLine: <strong>{{ task.task_deadline_date }}</strong></li>
+                                            <li>Status: <strong>{{ task.task_status }}</strong></li>
+                                          </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                 </td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            {% else %}
+              <h5 class="alert alert-primary ms-4 mb-4">There Is No Task Recorded</h5>
+            {% endif %}
+            
+        </div>
+    </div>
+
+{% endblock %}
